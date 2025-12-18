@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ninja Trip</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+      scroll-behavior: smooth;
+    }
+
+    /* === LOADING SCREEN === */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .loading-screen img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* === NAVIGATION === */
+    nav {
+      background-color: #553d9a;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+    }
+
+    .logo i {
+      margin-right: 10px;
+      font-size: 1.8rem;
+    }
+
+    .menu-toggle {
+      font-size: 24px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: white;
+    }
+
+    .menu {
+        display: none; 
+        flex-direction: column;
+        position: absolute;
+        top: 60px; 
+        right: 15px;
+        background-color: #553d9a;
+        border-radius: 10px;
+        padding: 10px;
+        z-index: 1000; 
+    }
+
+    .menu a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .menu a:hover {
+      background: #432e80;
+      border-radius: 5px;
+    }
+
+    /* === SECTION === */
+    section {
+      padding: 50px 30px;
+      display: none;
+    }
+
+    #home {
+      display: block; 
+      padding: 0;
+      position: relative;
+    }
+
+    /* === HERO SECTION === */
+    .hero {
+      background-color: #fff;
+      min-height: 100vh;
+      display: flex;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background: linear-gradient(135deg, #553d9a 0%, #6c5ce7 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 75%);
+      z-index: -1;
+    }
+
+    .hero-content {
+      padding: 50px 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .hero-image {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0px 0px rgba(0,0,0,0.15);
+    }
+
+    /* === SLIDER === */
+    .slider-section {
+      background-color: #fff;
+      padding: 50px 30px;
+    }
+
+    .slider-heading {
+      text-align: center;
+      color: #553d9a;
+      margin-bottom: 30px;
+    }
+
+    .slider {
+      max-width: 1000px;
+      position: relative;
+      margin: 20px auto;
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 5s ease;
+    }
+
+    .slides img {
+      width: 100%;
+      height: 500px;
+      object-fit: cover;
+    }
+
+    .slide {
+      min-width: 100%;
+      position: relative;
+    }
+
+    .slide .overlay {
+      position: absolute;
+      bottom: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+      width: 100%;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    /* === CTA BUTTON === */
+    .cta-button {
+      display: inline-block;
+      background: #fd79a8;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(253, 121, 168, 0.4);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(253, 121, 168, 0.6);
+    }
+
+    /* === FEATURED DESTINATIONS === */
+    .featured {
+      max-width: 1200px; 
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ff6f61;
+      margin-top: 100px;
+      margin-bottom: 30px;
+    }
+
+    .featured-destinations {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 20px; 
+    }
+
+    .destination-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 15px 40px rgba(85, 61, 154, 0.15);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .destination-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 25px 70px rgba(85, 61, 154, 0.3);
+    }
+
+    .destination-image img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+
+    .destination-info {
+      padding: 20px 25px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .destination-info h3 {
+      margin: 0 0 10px 0;
+      color: #553d9a;
+      font-size: 1.25rem;
+    }
+
+    .destination-info p {
+      margin: 0 0 12px 0;
+      font-weight: 600;
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .prices {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #aaa;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-right: 15px;
+    }
+
+    .discount-price {
+      color: #2ecc71;
+      font-weight: 700;
+      font-size: 1.3rem;
+      position: relative;
+    }
+
+    .discount-percentage {
+      background-color: #e74c3c;
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      padding: 2px 8px;
+      margin-left: 10px;
+      vertical-align: middle;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    .reviews {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f39c12;
+      margin-bottom: 15px;
+    }
+
+    .description {
+      font-size: 0.95rem;
+      color: #444;
+      line-height: 1.4;
+      flex-grow: 1;
+      display: none;
+    }
+
+    /* === RECOMMENDATION === */
+    #recommendation {
+      padding: 50px 30px;
+      background-color: #f9f8fd;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+    }
+
+    #recommendation h2 {
+      background: linear-gradient(90deg, #6a5acd, #ff7e5f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+
+    #recommendation p {
+      color: #555;
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+
+    .search-form {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .search-form input,
+    .search-form button {
+      padding: 10px;
+      margin-right: 10px;
+    }
+
+    .search-form input {
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .search-form button {
+      background: #fd79a8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .results {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px; 
+        margin-top: 20px;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 10px;
+      color: #555;
+      text-align: left;
+      font-size: 0.9em;
+    }
+
+    .card-content h3 {
+      margin: 0 0 5px 0;
+      color: #553d9a;
+    }
+
+    .price-container {
+      margin: 3px 0;
+      line-height: 1.4;
+    }
+
+    .price-label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #888;
+      margin-right: 10px;
+    }
+
+    .discount-price {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+
+    .discount-amount {
+      background-color: #e74c3c;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      margin-left: 5px;
+    }
+
+    .rating {
+      font-weight: 600;
+      color: orange;
+      margin: 3px 0;
+      font-size: 0.8em;
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: left;
+      padding: 40px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      color: #555;
+    }
+
+
+    /* === MODAL === */
+    #modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 28px;
+      color: #aaa;
+      cursor: pointer;
+    }
+
+    /* === CONTACT === */
+    .contact-form {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .contact-form input,
+    .contact-form textarea,
+    .contact-form button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    .contact-form button {
+      background: #553d9a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .contact-form button:hover {
+      background: #432e80;
+    }
+
+    /* === FILTER DROPDOWN === */
+    .filter-container {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .filter-button {
+      background: #3498db;
+      color: white;
+      padding: 8px 12px; 
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center; 
+      gap: 0.5rem;
+      transition: background-color 0.3s;
+      height: 40px; 
+    }
+
+    .filter-button img {
+      width: 20px; 
+      height: 20px; 
+    }
+
+    .filter-button:hover {
+      background: #2980b9;
+    }
+
+    .filter-panel {
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .filter-group label {
+      font-weight: bold;
+    }
+
+    .budget-inputs {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .budget-inputs input {
+      flex: 1;
+    }
+
+    /* === FOOTER === */
+    .site-footer {
+      background-color: #553d9a;
+      color: white;
+      padding: 40px 20px 20px;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-content {
+      margin-bottom: 30px;
+    }
+
+    .footer-title {
+      color: #fd79a8;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .footer-icon {
+      color: #fd79a8;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .footer-text {
+      color: #e1e1e8;
+    }
+
+    .footer-link {
+      color: #fd79a8;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-link:hover {
+      color: #ff9ec7;
+    }
+
+    .footer-divider {
+      border: none;
+      border-top: 1px solid #6c5ce7;
+      margin: 20px 0;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      color: #b8b8d6;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .hero-content {
+        flex-direction: column;
+        padding: 50px 20px;
+      }
+      
+    .hero-text {
+      padding-right: 0;
+      margin-bottom: 40px;
+    }
+      
+    .hero-title {
+      font-size: 2.5rem;
+    }
+      
+    .filter-container {
+      display: inline-block;
+      margin-right: 20px;
+    }
+
+    .search-container {
+      display: inline-block;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 15px;
+      color: #555;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: left;
+    }
+
+    .card-content h3 {
+      margin: 0 0 10px 0;
+      color: #553d9a;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .price-container {
+      margin: 5px 0;
+      line-height: 1.5;
+    }
+
+    .price-label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 3px;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .original-price {
+      text-decoration: line-through;
+      color: #888;
+      margin-right: 10px;
+    }
+
+    .discount-price {
+      color: #e74c3c;
+      font-weight: bold;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .discount-amount {
+      background-color: #e74c3c;
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      margin-left: 5px;
+    }
+
+    .rating {
+      font-weight: 600;
+      color: orange;
+      margin: 5px 0;
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: left;
+      padding: 40px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      color: #555;
+    }
+
+
+
+    .slides img {
+      height: 400px;
+      }
+    }
+    
+    .city-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #fd79a8;
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none; 
+    overflow: hidden;
+  }
+
+  .city-card:hover {
+    transform: scale(1.05); 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); 
+  }
+
+  .city-card img {
+    transition: transform 0.3s ease; 
+    width: 100%; 
+    height: 150px; 
+    object-fit: cover; 
+  }
+
+  .city-card:hover img {
+    transform: scale(1.1); 
+  }
+  </style>
+
+</head>
+<body>
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loading-screen">
+  <img src="/static/pict/logo.jpeg" alt="Logo">
+</div>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="logo">
+  <img src="/static/pict/rmlogo.png" alt="Ninja Trip Logo" style="height: 40px; margin-right: 10px;">
+  Ninja Trip</div>
+  <button class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+  <div class="menu" id="menu">
+    <a href="javascript:void(0);" onclick="showSection('home')">Home</a>
+    <a href="javascript:void(0);" onclick="showSection('recommendation')">Recommendation</a>
+    <a href="javascript:void(0);" onclick="showSection('contact')">Contact</a>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section id="home">
+  <div class="hero-content" style="display: flex; align-items: center; justify-content: space-between; padding: 50px; height: 400px; background-color: #f4f4f4;">
+    <!-- Additional Descriptions -->
+    <div class="hero-text" style="flex: 1; padding-right: 25px;">
+      <p style="font-size: 1.5rem; color: #ff6f61; text-align: left; font-family: 'Verdana', sans-serif; margin-bottom: 15px;">Best Destinations Await You</p>
+      <h1 style="font-size: 3rem; color: #333; text-align: left; font-family: 'Fredoka', cursive; margin-bottom: 20px;">Travel, Explore, Enjoy Your Perfect Escape</h1>
+      <p style="font-size: 1rem; color: #555; text-align: left; max-width: 800px; line-height: 1.5; margin-bottom: 15px;">
+        Effortlessly uncover incredible destinations that fit your budget and passions. Just share your preferences, and our system will curate perfect recommendations, from stunning natural wonders to vibrant cultural gems. 
+        Explore five of Indonesia's most beloved cities: Yogyakarta, Bali, Jakarta, Bandung, and Malang. Plus, we provide a wide range of services to cater to your needs, including thrilling tours, rejuvenating spa sessions, beach adventures, family fun spots, beauty clinics, and internet services. Make your travel plans smooth and hassle-free!
+      </p>
+      <a href="javascript:void(0);" onclick="showSection('recommendation')" class="cta-button" style="margin-top: 20px;">Cari Wisata Sekarang</a>
+    </div>
+    <div class="hero-image" style="flex: 1; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; height: 100%;">
+      <div class="slider" id="slider" style="width: 100%; height: 100%;">
+        <div class="slides" id="slides" style="display: flex; transition: transform 0.6s ease;">
+          <div class="slide" style="min-width: 100%;">
+            <img src="/static/pict/spa.jpg" alt="Spa" style="width: 100%; height: auto; border-radius: 15px;">
+          </div>
+          
+          <div class="slide" style="min-width: 100%;">
+            <img src="/static/pict/pantai.jpg" alt="Pantai" style="width: 100%; height: auto; border-radius: 12px;">
+          </div>
+          <div class="slide" style="min-width: 100%;">
+            <img src="/static/pict/gunung.jpg" alt="Gunung" style="width: 100%; height: auto; border-radius: 12px;">
+          </div>
+          <div class="slide" style="min-width: 100%;">
+            <img src="/static/pict/kecak.jpg" alt="Kecak" style="width: 100%; height: auto; border-radius: 15px;">
+          </div>
+          <div class="slide" style="min-width: 100%;">
+            <img src="/static/pict/jeep.jpg" alt="Jeep" style="width: 100%; height: auto; border-radius: 15px;">
+          </div>
+          <div class="slide" style="min-width: 100%;">
+            <img src="/static/pict/wahana.jpg" alt="Wahana" style="width: 100%; height: auto; border-radius: 15px;">
+          </div>
+          <div class="slide" style="min-width: 100%;">
+            <img src="/static/pict/spa.jpg" alt="Spa" style="width: 100%; height: auto; border-radius: 15px;">
+          </div>
+          
+          <div class="slide" style="min-width: 100%;">
+            <img src="/static/pict/pantai.jpg" alt="Pantai" style="width: 100%; height: auto; border-radius: 12px;">
+          </div>
+        </div>
+      </div>
+      <button onclick="prevSlide()" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.7); border: none; border-radius: 5px; padding: 10px;">&#10094;</button>
+      <button onclick="nextSlide()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.7); border: none; border-radius: 5px; padding: 10px;">&#10095;</button>
+    </div>
+  </div>
+  
+  <!-- Featured Destinations -->
+  <div class="featured">
+    <h2 class="section-title" style="text-align: center; font-family: 'Trebuchet MS', sans-serif;">Wisata Terbaik</h2>
+    <div class="featured-destinations">
+        <div class="destination-card" onclick="toggleDescription(this)">
+            <div class="destination-image">
+                <img src="/static/pict/telaga.jpeg" alt="rafting" />
+            </div>
+            <div class="destination-info">
+                <h3>Telaga Waja River Rafting oleh BTR</h3>
+                <p>Bali</p>
+                <div class="prices">
+                    <div class="original-price">Rp 400.000</div>
+                    <div class="discount-price">
+                        Rp 330.000
+                        <span class="discount-percentage" id="discountText1">Diskon: 18%</span>
+                    </div>
+                </div>
+                <div class="reviews">107 reviews</div>
+                <p class="description">
+                    Nikmati pengalaman rafting yang mendebarkan di Telaga Waja, Bali. Tantang diri Anda untuk
+                    melawan arus sungai sejauh 18 km dalam waktu 2,5 jam dan segarkan pikiran Anda sambil
+                    merasakan adrenalin yang membantu menghilangkan kelelahan. Jangan lewatkan kesempatan
+                    berpetualang di Sungai Telaga Waja saat berada di Bali.
+                </p>
+            </div>
+        </div>
+
+        <div class="destination-card" onclick="toggleDescription(this)">
+            <div class="destination-image">
+                <img src="/static/pict/spaa.jpeg" alt="spa" />
+            </div>
+            <div class="destination-info">
+                <h3>Ubud Traditional Spa</h3>
+                <p>Bali</p>
+                <div class="prices">
+                    <div class="original-price">Rp 253.000</div>
+                    <div class="discount-price">
+                        Rp 215.050
+                        <span class="discount-percentage" id="discountText2">Diskon: 15%</span>
+                    </div>
+                </div>
+                <div class="reviews">16 reviews</div>
+                <p class="description">
+                    Nikmati pengalaman relaksasi di Ubud Traditional Spa, yang terletak di lokasi tenang di ujung desa. Rasakan perawatan khusus dengan teknik unik, yaitu Rice Farmer Massage dan Ubud Royal Massage, yang tidak dapat ditemukan di tempat lain.
+                </p>
+            </div>
+        </div>
+
+        <div class="destination-card" onclick="toggleDescription(this)">
+            <div class="destination-image">
+                <img src="/static/pict/tektona.jpeg" alt="tektona" />
+            </div>
+            <div class="destination-info">
+                <h3>Tektona Waterpark Tickets</h3>
+                <p>Bandung</p>
+                <div class="prices">
+                    <div class="original-price">Rp 400.000</div>
+                    <div class="discount-price">
+                        Rp 370.000
+                        <span class="discount-percentage" id="discountText3">Diskon: 8%</span>
+                    </div>
+                </div>
+                <div class="reviews">730 reviews</div>
+                <p class="description">
+                    Nikmati liburan musim panas seru di Tektona Waterpark, taman bermain air yang cocok untuk seluruh keluarga. Berenang dan bermain di kolam yang bersih, bersantai dengan ban di lazy river, atau tantang adrenalin Anda dengan meluncur di perosotan tertinggi.
+                </p>
+            </div>
+        </div>
+
+        <div class="destination-card" onclick="toggleDescription(this)">
+            <div class="destination-image">
+                <img src="/static/pict/museum.jpeg" alt="museum" />
+            </div>
+            <div class="destination-info">
+                <h3>Tiket Museum Angkut (Jatim Park Group)</h3>
+                <p>Malang</p>
+                <div class="prices">
+                    <div class="original-price">Rp 110.000</div>
+                    <div class="discount-price">
+                        Rp 104.500
+                        <span class="discount-percentage" id="discountText4">Diskon: 5%</span>
+                    </div>
+                </div>
+                <div class="reviews">61.7K reviews</div>
+                <p class="description">
+                    Jelajahi Museum Angkut, museum transportasi pertama di Asia Tenggara yang menawarkan pengalaman unik menyusuri sejarah dunia otomotif dan penerbangan!
+                </p>
+            </div>
+        </div>
+
+        <div class="destination-card" onclick="toggleDescription(this)">
+            <div class="destination-image">
+                <img src="/static/pict/atv.jpeg" alt="ATV" />
+            </div>
+            <div class="destination-info">
+                <h3>Ubud ATV Ride Adventure By ATV Ride</h3>
+                <p>Bali</p>
+                <div class="prices">
+                    <div class="original-price">Rp 750.000</div>
+                    <div class="discount-price">
+                        Rp 302.090
+                        <span class="discount-percentage" id="discountText5">Diskon: 60%</span>
+                    </div>
+                </div>
+                <div class="reviews">55 reviews</div>
+                <p class="description">
+                    Rasakan sensasi petualangan yang mendebarkan dan memacu adrenalin selama 1,5 jam dengan mengendarai ATV 4 roda melalui sawah, sungai, gua, dan pepohonan hijau yang menakjubkan.
+                </p>
+            </div>
+        </div>
+
+        <div class="destination-card" onclick="toggleDescription(this)">
+            <div class="destination-image">
+                <img src="/static/pict/BXSea.jpeg" alt="BXSea" />
+            </div>
+            <div class="destination-info">
+                <h3>BXSea</h3>
+                <p>Jakarta</p>
+                <div class="prices">
+                    <div class="original-price">Rp 178.250</div>
+                    <div class="discount-price">
+                        Rp 155.000
+                        <span class="discount-percentage" id="discountText6">Diskon: 13%</span>
+                    </div>
+                </div>
+                <div class="reviews">835 reviews</div>
+                <p class="description">
+                    Jelajahi Oceanarium BXSea dan temukan keajaiban laut! BXSea Bintaro menawarkan 18 perjalanan bertema menarik.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- Wisata Per Kota Section -->
+  <div class="city-tour-section" style="padding: 50px 30px; background-color: #fff;">
+    <h2 style="text-align: center; color: #ff6f61; margin-bottom: 30px; font-family: 'Trebuchet MS', sans-serif; font-size: 2rem;">Wisata Per Kota</h2>
+    <div class="city-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto;">
+      
+      <a href="/city/yogyakarta" class="city-card" style="cursor: pointer; background: #fd79a8; color: white; border-radius: 10px; text-align: center; text-decoration: none;">
+        <img src="/static/pict/yogyakarta.jpeg" alt="Yogyakarta" style="width: 100%; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px; object-fit: cover;">
+        <h3>Yogyakarta</h3>
+        <p>Explore timeless culture and royal heritage</p>
+      </a>
+
+      <a href="/city/bali" class="city-card" style="cursor: pointer; background: #fd79a8; color: white; border-radius: 10px; text-align: center; text-decoration: none;">
+        <img src="/static/pict/bali.jpeg" alt="Bali" style="width: 100%; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px; object-fit: cover;">
+        <h3>Bali</h3>
+        <p>Island paradise of beaches and tradition</p>
+      </a>
+
+      <a href="/city/jakarta" class="city-card" style="cursor: pointer; background: #fd79a8; color: white; border-radius: 10px; text-align: center; text-decoration: none;">
+        <img src="/static/pict/jakarta.jpeg" alt="Jakarta" style="width: 100%; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px; object-fit: cover;">
+        <h3>Jakarta</h3>
+        <p>Vibrant capital full of energy and contrast</p>
+      </a>
+
+      <a href="/city/bandung" class="city-card" style="cursor: pointer; background: #fd79a8; color: white; border-radius: 10px; text-align: center; text-decoration: none;">
+        <img src="/static/pict/bandung.jpeg" alt="Bandung" style="width: 100%; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px; object-fit: cover;">
+        <h3>Bandung</h3>
+        <p>Cool city of fashion, food, and nature</p>
+      </a>
+
+      <a href="/city/malang" class="city-card" style="cursor: pointer; background: #fd79a8; color: white; border-radius: 10px; text-align: center; text-decoration: none;">
+        <img src="/static/pict/malang.jpeg" alt="Malang" style="width: 100%; height: 150px; border-top-left-radius: 10px; border-top-right-radius: 10px; object-fit: cover;">
+        <h3>Malang</h3>
+        <p>Fresh air, history, and scenic beauty</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDATION -->
+<section id="recommendation">
+  <h2>Cari Rekomendasi Wisata</h2>
+
+  <div class="search-filter-container" style="max-width: 900px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 25px; margin-bottom: 40px;">
+    <form class="search-form" method="POST" action="/recommend">
+      <div class="search-container" style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+        <button type="button" id="filterToggle" class="filter-button" >
+          <img src="/static/pict/filter.svg" alt="Filter" />
+          <span>Filter</span>
+        </button>
+        
+        <div style="display: flex; flex: 1; align-items: center;">
+          <input type="text" name="keyword" placeholder="Cari wisata..." required style="flex: 1; padding: 15px; border: 1px solid #e1e1e8; border-radius: 8px 0 0 8px; font-size: 16px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);"/>
+          <button type="submit" style="padding: 15px 25px; background: #fd79a8; color: white; border: none; border-radius: 0 8px 8px 0; cursor: pointer; font-weight: bold; transition: background 0.2s ease;">Cari</button>
+        </div>
+      </div>
+      
+      <div id="filterPanel" style="display: none; background: #f9f9fc; border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid #e1e1e8;">
+        <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+          <div style="flex: 1; min-width: 250px;">
+            <div class="filter-group" style="margin-bottom: 15px;">
+              <label for="kota" style="display: block; margin-bottom: 5px; font-size: 14px; color: #555;">Kota:</label>
+              <select name="kota" id="kota" style="width: 100%; padding: 10px; border: 1px solid #e1e1e8; border-radius: 6px; background: white;">
+                <option value="">Pilih Kota</option>
+                {% for city in cities %}
+                  <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <div class="filter-group" style="margin-bottom: 15px;">
+              <label for="kategori" style="display: block; margin-bottom: 5px; font-size: 14px; color: #555;">Kategori:</label>
+              <select name="kategori" id="kategori" style="width: 100%; padding: 10px; border: 1px solid #e1e1e8; border-radius: 6px; background: white;">
+                <option value="">Pilih Kategori</option>
+                {% for category in categories %}
+                  <option value="{{ category }}">{{ category }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+                    
+          <div style="flex: 1; min-width: 250px;">
+            <div class="filter-group" style="margin-bottom: 15px;">
+              <label style="display: block; margin-bottom: 5px; font-size: 14px; color: #555;">Budget (Rp):</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="number" name="min_budget" placeholder="Min" min="0" style="flex: 1; padding: 10px; border: 1px solid #e1e1e8; border-radius: 6px; background: white;"/>
+                <input type="number" name="max_budget" placeholder="Max" min="0" style="flex: 1; padding: 10px; border: 1px solid #e1e1e8; border-radius: 6px; background: white;"/>
+              </div>
+            </div>
+            
+            <div class="filter-group" style="margin-bottom: 15px;">
+              <label for="min_rating" style="display: block; margin-bottom: 5px; font-size: 14px; color: #555;">Rating:</label>
+              <select name="min_rating" id="min_rating" style="width: 100%; padding: 10px; border: 1px solid #e1e1e8; border-radius: 6px; background: white;">
+                <option value="">Rating</option>
+                <option value="1">⭐ 1 ke atas</option>
+                <option value="2">⭐ 2 ke atas</option>
+                <option value="3">⭐ 3 ke atas</option>
+                <option value="4">⭐ 4 ke atas</option>
+                <option value="5">⭐ 5</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div style="margin-top: 15px; text-align: right; border-top: 1px solid #e1e1e8; padding-top: 15px;">
+          <button type="button" id="closeFilters" style="padding: 8px 15px; background: transparent; border: 1px solid #ccc; border-radius: 6px; margin-right: 10px; cursor: pointer; font-weight: bold; color: #553d9a;">Batalkan</button>
+          <button type="submit" style="padding: 8px 20px; background: #553d9a; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.2s ease;">Terapkan</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="results">
+    {% if result %}
+      {% if result.success %}
+        {% for rec in result.recommendations %}
+          <div class="card" onclick="showModal('{{ rec.nama }}', '{{ rec.deskripsi }}')">
+            <img src="{{ rec.gambar }}" alt="{{ rec.nama }}">
+            <div class="card-content">
+                <h3>{{ rec.nama }}</h3>
+                <p style="font-size: 0.95em; color: #555;">
+                    <strong>{{ rec.kota }}</strong> - {{ rec.lokasi }}</p>
+              <div class="price-container">
+                <span class="price-label"></span>
+                {% if rec.harga_asli and rec.harga_asli > rec.harga %}
+                  <span class="original-price">
+                    Rp {{ "{:,.0f}".format(rec.harga_asli) }}
+                  </span>
+                  <span class="discount-price">
+                    Rp {{ "{:,.0f}".format(rec.harga) }}
+                  </span>
+                  <span class="discount-amount">
+                    -{{ "{:.0f}".format((rec.harga_asli - rec.harga) / rec.harga_asli * 100) }}%
+                  </span>
+                {% else %}
+                  <span class="discount-price">
+                    Rp {{ "{:,.0f}".format(rec.harga) }}
+                  </span>
+                {% endif %}
+              </div>
+              <p class="rating" style="color: orange; font-size: 1.0em;">
+                  <strong>Rating:</strong> ⭐ {{ rec.rating }} (<span>{{ rec.ulasan }} ulasan</span>)
+              </p>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-results">
+          <p>{{ result.message }}</p>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <h2 style="text-align: center; margin-bottom: 30px; font-size: 48px; font-family: 'Fredoka', cursive; font-weight: bold;">
+    KELOMPOK 2
+  </h2>
+  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-bottom: 30px;">
+    
+    <div style="background: white; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px; width: 250px; text-align: center;">
+      <img src="/static/pict/dea.jpeg" alt="Anggota 1" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+      <h3 style="margin: 10px 0 5px;">Dea Kayla Putri Darussman</h3>
+      <p style="margin: 0; color: gray;">3323600005</p>
+    </div>
+
+    <div style="background: white; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px; width: 250px; text-align: center;">
+      <img src="/static/pict/dinda.jpeg" alt="Anggota 2" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+      <h3 style="margin: 10px 0 5px;">Dinda Ayu Permatasari</h3>
+      <p style="margin: 0; color: gray;">3323600012</p>
+    </div>
+
+    <div style="background: white; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px; width: 250px; text-align: center;">
+      <img src="/static/pict/ijah.jpeg" alt="Anggota 3" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+      <h3 style="margin: 10px 0 5px;">Izzah Karimah</h3>
+      <p style="margin: 0; color: gray;">3323600013</p>
+    </div>
+
+    <div style="background: white; border-radius: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px; width: 250px; text-align: center;">
+      <img src="/static/pict/lia.jpg" alt="Anggota 4" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;">
+      <h3 style="margin: 10px 0 5px;">Aulia Latifa Kristiono</h3>
+      <p style="margin: 0; color: gray;">3323600030</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h3 id="modal-title"></h3>
+    <p id="modal-description"></p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <h2 class="footer-title">Hubungi Kami</h2>
+      <div class="footer-contact">
+        <div class="footer-contact-item">
+          <i class="fas fa-envelope footer-icon"></i>
+          <span class="footer-text">Email: <a href="mailto:ninjatrip.sdt@gmail.com" class="footer-link">ninjatrip.sdt@gmail.com</a></span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fas fa-map-marker-alt footer-icon"></i>
+          <span class="footer-text">Alamat: Jl. Raya ITS, Keputih, Sukolilo, Surabaya, East Java 60111</span>
+        </div>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <p>&copy; 2025 Sains Data Terapan. All rights reserved - PENS</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      document.getElementById('loading-screen').style.display = 'none';
+    }, 2000);
+  });
+
+  function toggleDescription(card) {
+      const desc = card.querySelector('.description');
+      if (desc.style.display === 'block') {
+          desc.style.display = 'none';
+      } else {
+          desc.style.display = 'block';
+      }
+  }
+  let slideIndex = 1; 
+  const slides = document.getElementById("slides");
+  const totalSlides = 6; 
+  let autoSlideInterval;
+
+  slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+
+  function showSlides() {
+      slides.style.transform = `translateX(-${slideIndex * 100}%)`;
+  }
+
+  function nextSlide() {
+      slideIndex++;
+      slides.style.transition = "transform 0.6s ease";
+      showSlides();
+
+      if (slideIndex === totalSlides + 1) {
+          setTimeout(() => {
+              slides.style.transition = "none";
+              slideIndex = 1;
+              showSlides();
+              setTimeout(() => {
+                  slides.style.transition = "transform 0.6s ease";
+              }, 50);
+          }, 600); 
+      }
+  }
+
+  function prevSlide() {
+      slideIndex--;
+      slides.style.transition = "transform 0.6s ease";
+      showSlides();
+ 
+      if (slideIndex === 0) {
+          setTimeout(() => {
+              slides.style.transition = "none";
+              slideIndex = totalSlides;
+              showSlides();
+              setTimeout(() => {
+                  slides.style.transition = "transform 0.6s ease";
+              }, 50);
+          }, 600);
+      }
+  }
+
+  function startAutoSlide() {
+      autoSlideInterval = setInterval(nextSlide, 4000);
+  }
+
+  function stopAutoSlide() {
+      clearInterval(autoSlideInterval);
+  }
+
+  const slider = document.getElementById('slider');
+  if (slider) {
+      slider.addEventListener('mouseenter', stopAutoSlide);
+      slider.addEventListener('mouseleave', startAutoSlide);
+  }
+
+  startAutoSlide();
+
+  function toggleMenu() {
+    const menu = document.getElementById("menu");
+    menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+  }
+
+  function showSection(id) {
+    document.querySelectorAll("section").forEach(sec => sec.style.display = "none");
+    document.getElementById(id).style.display = "block";
+    document.getElementById("menu").style.display = "none";
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showModal(title, description) {
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-description').textContent = description;
+    document.getElementById('modal').style.display = 'block';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    if (event.target === document.getElementById('modal')) {
+      closeModal();
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded", function () {
+    {% if result %}
+      showSection('recommendation');
+    {% endif %}
+  });
+
+  (function() {
+    const filterToggle = document.getElementById('filterToggle');
+    const filterPanel = document.getElementById('filterPanel');
+
+    filterToggle.addEventListener('click', (e) => {
+      e.stopPropagation(); 
+      const isActive = filterPanel.classList.toggle('active');
+      filterPanel.hidden = !isActive;
+      filterToggle.setAttribute('aria-expanded', isActive);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!filterToggle.contains(e.target) && !filterPanel.contains(e.target)) {
+        filterPanel.classList.remove('active');
+        filterPanel.hidden = true;
+        filterToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    
+  function showModal(name, description) {
+    console.log(`Showing details for: ${name}`);
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterToggle = document.getElementById('filterToggle');
+    const filterPanel = document.getElementById('filterPanel');
+    const closeFilters = document.getElementById('closeFilters');
+    
+    filterToggle.addEventListener('click', function() {
+      filterPanel.style.display = filterPanel.style.display === 'none' ? 'block' : 'none';
+      filterToggle.setAttribute('aria-expanded', filterPanel.style.display === 'block');
+    });
+    
+    closeFilters.addEventListener('click', function() {
+      filterPanel.style.display = 'none';
+      filterToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+  })();
+</script>
+</body>
+</html>

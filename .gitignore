@@ -1,0 +1,53 @@
+# =====================
+# Python cache & build
+# =====================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# =====================
+# Virtual Environment
+# =====================
+venv/
+.env/
+.env.*
+node_modules/
+__pycache__/
+*.pkl
+*.joblib
+*.pt
+*.csv
+# =====================
+# VS Code / IDE
+# =====================
+.vscode/
+.idea/
+
+# =====================
+# OS files
+# =====================
+.DS_Store
+Thumbs.db
+
+# =====================
+# Logs
+# =====================
+*.log
+
+# =====================
+# Jupyter / ML
+# =====================
+.ipynb_checkpoints/
+
+# =====================
+# Model & Data (optional)
+# =====================
+# Uncomment if model/data is large or sensitive
+# model/
+# data/
+
+# =====================
+# Docker
+# =====================
+*.tar
