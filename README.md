@@ -31,10 +31,7 @@ By analyzing destination characteristics and user-related data, the system recom
 
 ## Developer Team
 
-Dea Kayla D.
-
-Dinda Ayu Permatasari
-
-Izzah Karimah
-
+Dea Kayla D.  
+Dinda Ayu Permatasari  
+Izzah Karimah  
 Aulia Latifa K.
