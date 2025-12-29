@@ -3,6 +3,10 @@
 A web-based travel recommendation system that provides personalized destination suggestions using **content-based filtering**.  
 This system focuses on **5 major cities in Indonesia** and analyzes tourist reviews, ratings, and destination attributes to generate relevant travel recommendations.
 
+## Live Demo
+You can access the deployed application here:
+👉 https://web-travel-recommendation.up.railway.app/
+
 ## Project Overview
 
 This project aims to help users discover suitable travel destinations based on their preferences.  
