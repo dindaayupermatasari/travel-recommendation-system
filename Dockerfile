@@ -14,5 +14,4 @@ RUN adduser --disabled-password --gecos "" appuser \
     && chown -R appuser /app
 
 USER appuser
-
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT:-5000} app:app"]
