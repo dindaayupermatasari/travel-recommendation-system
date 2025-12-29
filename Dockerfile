@@ -1,16 +1,17 @@
-FROM python:3-slim
-
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
-
-RUN python -m nltk.downloader -d /usr/local/share/nltk_data punkt stopwords punkt_tab
-
-ENV NLTK_DATA=/usr/local/share/nltk_data
+FROM python:3.11
 
 WORKDIR /app
-COPY . /app
 
-RUN adduser --disabled-password --gecos "" appuser && chown -R appuser /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Kalau nltk_data sudah ada di repo, tidak perlu download lagi
+ENV NLTK_DATA=/usr/local/share/nltk_data
+
+COPY . .
+
+RUN adduser --disabled-password --gecos "" appuser \
+    && chown -R appuser /app
 
 USER appuser
 
